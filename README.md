@@ -65,10 +65,11 @@
 2. Check for the response status code. Pass the step if it’s `200 OK`, else fail.
 3. Validate the parameters (`ID`, `email`, `first_name`, `last_name`) from the API response against the stored fixtures.
 
-## Setup and Running the Tests
 
-1. **Clone the Repository:**
+Feel free to adjust the instructions or add any additional sections that might be necessary for your setup.
 
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+
+
+
+
+   
