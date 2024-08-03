@@ -4,42 +4,7 @@ describe('EMI Calculator UI Tests', () => {
       return false;
     });
   });
-  function moveSlider(sliderSelector, inputSelector, targetAmount) {
-    cy.get(inputSelector).then($input => {
-      const initialAmount = parseInt($input.val().replace(/,/g, ''), 10);
-      if (initialAmount === targetAmount) {
-        return;
-      }
-      const stepAmount = 10000;
-      const steps = Math.abs((targetAmount - initialAmount) / stepAmount);
-
-      function moveStep(stepIndex) {
-        cy.get(sliderSelector).then($slider => {
-          // const slider=$slider[0];
-          // const rect =$slider.getBoundingCLientRect();
-          const handle = $slider[0];
-          const handleRect = handle.getBoundingCLientRect();
-          const startX = handleRect.left + handle.width / 2;
-          const direction = targetAmount > initialAmount ? 1 : -1;
-          const endX = startX + direction * stepAmount * rect.width / initialAmount;
-
-          cy.wrap(handle)
-            .trigger('mousedown', { which: 1, pageX: startX })
-            .trigger('mousemove', { which: 1, pageX: endX })
-            .trigger('mouseup');
-          cy.get(inputSelector).invoke('val').then(value => {
-            const currentValue = parseInt(value.replace(/,/g, ''), 10);
-            if (currentValue !== targetAmount && stepIndex < steps) {
-              moveStep(stepIndex + 1);
-            }
-          });
-
-        });
-      }
-      moveStep(0);
-    });
-  }
-
+  
   it('Validates the EMI pie chart for Home Loan with Loan Amount 2500000', () => {
     cy.visit('https://emicalculator.net/');
     cy.get('#home-loan').click();
@@ -63,7 +28,6 @@ describe('EMI Calculator UI Tests', () => {
     cy.get('input#loaninterest').clear().type('10');
     cy.get('input#loanterm').clear().type('10{enter}');
     cy.get('.highcharts-pie-series').should('exist');
-
     cy.get('.highcharts-data-label').each(($el, index, $list) => {
       cy.wrap($el).find('text tspan').invoke('text').then((text) => {
         const percentageText = text.trim();
@@ -72,6 +36,7 @@ describe('EMI Calculator UI Tests', () => {
       });
     });
   });
+  
   it('Validate personal loan tab with Bar chart by using input through slider for Amount 1000000', () => {
     cy.visit('https://emicalculator.net/');
     cy.get('#personal-loan').click();
@@ -120,9 +85,7 @@ describe('EMI Calculator UI Tests', () => {
       cy.get('#emibarchart .highcharts-series-group').should('exist');
       cy.get('#emibarchart .highcharts-series-group .highcharts-point').its('length').then((numberOfBars) => {
         cy.log('Number of bars:', numberOfBars);
-  
-        // Additional assertions or actions can be taken based on the number of bars
-        expect(numberOfBars).to.be.greaterThan(0); // Example assertion
+        expect(numberOfBars).to.be.greaterThan(0);
       });
       cy.get('#emibarchart .highcharts-series-group .highcharts-point')
       .should('length',18)
